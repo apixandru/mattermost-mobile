@@ -61,4 +61,11 @@ dependencies {
 
     implementation 'io.reactivex.rxjava3:rxjava:3.1.10'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+
+    implementation('org.unifiedpush.android:connector:3.0.10') {
+        // Avoid duplicate classes with androidx.security:security-crypto's
+        // tink-android dependency (same classes, different artifact) — the
+        // app module pins com.google.crypto.tink:tink-android explicitly.
+        exclude group: 'com.google.crypto.tink', module: 'tink'
+    }
 }

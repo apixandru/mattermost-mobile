@@ -79,6 +79,7 @@ export interface Spec extends TurboModule {
 
     // Android only
     setNavigationBarColor: (color: string, lightIcons: boolean) => void;
+    registerUnifiedPush: () => void;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>('RNUtils');

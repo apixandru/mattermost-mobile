@@ -40,6 +40,11 @@ import {isMainActivity, isTablet} from '@utils/helpers';
 import {logDebug, logError, logInfo, logWarning} from '@utils/log';
 import {convertToNotificationData} from '@utils/notification';
 
+// Temporary hardcoded flag — will be replaced by a user preference (settings
+// toggle) so Android users can opt into UnifiedPush instead of FCM. When false,
+// Android registration falls through to FCM as before.
+const USE_UNIFIED_PUSH_ON_ANDROID = false;
+
 const messages = defineMessages({
     replyTitle: {
         id: 'mobile.push_notification_reply.title',
@@ -69,6 +74,7 @@ class PushNotificationsSingleton {
             Notifications.events().registerNotificationReceivedForeground(this.onNotificationReceivedForeground),
             Notifications.events().registerRemoteNotificationsRegistrationFailed(this.NotificationsRegistrationFailed),
             Notifications.events().registerRemoteNotificationsRegistrationDenied(this.onRemoteNotificationsRegistrationDenied),
+            DeviceEventEmitter.addListener(Events.UNIFIED_PUSH_TOKEN_RECEIVED, this.onUnifiedPushTokenReceived),
         ];
 
         if (register) {
@@ -86,6 +92,12 @@ class PushNotificationsSingleton {
         if (!isRegistered) {
             await requestNotifications(['alert', 'sound', 'badge']);
         }
+
+        if (Platform.OS === 'android' && USE_UNIFIED_PUSH_ON_ANDROID) {
+            RNUtils.registerUnifiedPush();
+            return;
+        }
+
         Notifications.registerRemoteNotifications();
 
         // Never call Notifications.registerPushKit() — PushKit is owned by
@@ -345,6 +357,13 @@ class PushNotificationsSingleton {
             this.requestNotificationReplyPermissions();
         }
         return null;
+    };
+
+    onUnifiedPushTokenReceived = (event: {token: string}) => {
+        this.configured = true;
+        storeDeviceToken(event.token);
+        logDebug('Notification token registered', event.token);
+        this.requestNotificationReplyPermissions();
     };
 
     onRemoteNotificationsRegistrationDenied = () => {

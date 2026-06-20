@@ -1,0 +1,8 @@
+node_modules
+ios/Pods
+ios/build
+android/build
+android/app/build
+.git
+dist
+detox/node_modules
