@@ -85,4 +85,8 @@ class RNUtilsModule(val reactContext: ReactApplicationContext) : NativeRNUtilsSp
     override fun setNavigationBarColor(color: String, lightIcons: Boolean) {
         implementation.setNavigationBarColor(color, lightIcons)
     }
+
+    override fun registerUnifiedPush() {
+        implementation.registerUnifiedPush()
+    }
 }

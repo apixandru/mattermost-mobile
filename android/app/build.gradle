@@ -109,6 +109,12 @@ android {
         abortOnError false
     }
 
+    packagingOptions {
+        // androidx.annotation:annotation and androidx.annotation:annotation-jvm both
+        // ship the same LICENSE.txt, which collides during resource merging.
+        resources.excludes.add("META-INF/androidx/annotation/annotation/LICENSE.txt")
+    }
+
     defaultConfig {
         applicationId "com.mattermost.rnbeta"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -214,6 +220,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation "com.google.firebase:firebase-messaging:$firebaseVersion"
+    implementation('org.unifiedpush.android:connector:3.0.10') {
+        // Avoid duplicate classes with androidx.security:security-crypto's
+        // tink-android dependency (same classes, different artifact) — use
+        // tink-android everywhere instead via the explicit dependency below.
+        exclude group: 'com.google.crypto.tink', module: 'tink'
+    }
+    implementation 'com.google.crypto.tink:tink-android:1.17.0'
     // Detox: build from source via the `:detox` Gradle subproject defined in
     // android/settings.gradle. This activates detox/scripts/postinstall.js's
     // null-guard patch in FabricUIManagerIdlingResources.kt (see the comment in

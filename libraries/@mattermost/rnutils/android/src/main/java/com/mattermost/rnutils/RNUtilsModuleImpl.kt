@@ -18,6 +18,7 @@ import com.mattermost.rnutils.helpers.SaveDataTask
 import com.mattermost.rnutils.helpers.SplitView
 import androidx.core.graphics.toColorInt
 import com.facebook.react.bridge.LifecycleEventListener
+import org.unifiedpush.android.connector.UnifiedPush
 
 class RNUtilsModuleImpl(private val reactContext: ReactApplicationContext): LifecycleEventListener {
 
@@ -271,5 +272,22 @@ class RNUtilsModuleImpl(private val reactContext: ReactApplicationContext): Life
                 android.util.Log.e("RNUtils", "Error setting navigation bar color: $colorHex", e)
             }
         }
+    }
+
+    // Hardcoded swap (no fdroid/Firebase-removal decision yet, see
+    // docs/unified-push-integration-plan.md Phase 3a) — Android only.
+    fun registerUnifiedPush() {
+        val context = reactContext.applicationContext
+        val distributors = UnifiedPush.getDistributors(context)
+
+        if (distributors.isEmpty()) {
+            android.util.Log.w("RNUtils", "UnifiedPush: no distributor app installed, skipping registration")
+            return
+        }
+
+        val saved = UnifiedPush.getSavedDistributor(context)
+        val distributor = saved?.takeIf { it in distributors } ?: distributors[0]
+        UnifiedPush.saveDistributor(context, distributor)
+        UnifiedPush.register(context)
     }
 }

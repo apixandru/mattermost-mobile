@@ -90,6 +90,13 @@
       <receiver android:name=".NotificationReplyBroadcastReceiver"
                android:enabled="true"
                android:exported="false" />
+      <service android:name=".UnifiedPushService"
+                android:enabled="true"
+                android:exported="false">
+          <intent-filter>
+              <action android:name="org.unifiedpush.android.connector.PUSH_EVENT"/>
+          </intent-filter>
+      </service>
       <activity
         android:name="com.mattermost.rnshare.ShareActivity"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
