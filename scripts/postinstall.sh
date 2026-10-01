@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  if [ "${INTUNE_ENABLED:-}" = "1" ]; then
-    echo "🔐 INTUNE_ENABLED detected"
-    npm run intune:init
-  else
-    echo "Getting Cocoapods dependencies"
-    npm run pod-install
-  fi
-fi
-
 COMPASS_ICONS="node_modules/@mattermost/compass-icons/font/compass-icons.ttf"
 if [ -z "$COMPASS_ICONS" ]; then
     echo "Compass Icons font not found"
