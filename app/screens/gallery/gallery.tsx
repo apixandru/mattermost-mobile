@@ -86,6 +86,12 @@ const Gallery = forwardRef<GalleryRef, GalleryProps>(({
         return () => listener.remove();
     }, []);
 
+    useEffect(() => {
+        return () => {
+            useGallery(galleryIdentifier).resetSharedValues();
+        };
+    }, [galleryIdentifier]);
+
     useImperativeHandle(ref, () => ({
         close,
     }));
