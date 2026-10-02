@@ -68,6 +68,9 @@ tags
 android/sentry.properties
 ios/sentry.properties
 
+# Local signing credentials
+scripts/build-release.sh
+
 # Testing
 .nyc_output
 coverage

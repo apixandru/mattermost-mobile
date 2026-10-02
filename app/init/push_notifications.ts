@@ -43,7 +43,7 @@ import {convertToNotificationData} from '@utils/notification';
 // Temporary hardcoded flag — will be replaced by a user preference (settings
 // toggle) so Android users can opt into UnifiedPush instead of FCM. When false,
 // Android registration falls through to FCM as before.
-const USE_UNIFIED_PUSH_ON_ANDROID = false;
+const USE_UNIFIED_PUSH_ON_ANDROID = true;
 
 const messages = defineMessages({
     replyTitle: {
